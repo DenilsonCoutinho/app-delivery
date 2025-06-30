@@ -78,7 +78,7 @@ export default function MenuOrder() {
         <div className=" bg-gray-100 text-black ">
             <div className='md:flex hidden md:h-96'>
                 <Swiper
-                    slidesPerView={2}
+                    slidesPerView={3}
                     spaceBetween={30}
                     freeMode={true}
                     pagination={{
