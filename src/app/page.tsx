@@ -2,9 +2,8 @@ import { Kodchasan } from "next/font/google";
 import Hero from "./components/hero";
 import MenuPreview from "./components/menuPreview";
 import MenuOrder from "./components/menuOrder";
-import CartOrder from "./components/cartOrders";
-import { Drawer } from "./components/ui/drawer";
-import ViewOrder from "./components/viewOrders";
+import ToggleCart from "./components/toggleCart";
+import CartDrawerView from "./components/cartDrawerView";
 
 const kodchasan = Kodchasan({
   variable: "--font-geist-sans",
@@ -15,11 +14,11 @@ export default function Home() {
 
   return (
     <div className={`${kodchasan.className} bg-white`}>
-      <ViewOrder />
+      <CartDrawerView />
       <Hero />
       <MenuPreview />
       <MenuOrder />
-      <CartOrder />
+      <ToggleCart />
     </div>
   );
 }

@@ -18,7 +18,7 @@ function ButtonCart() {
     )
 }
 
-export default function CartOrder() {
+export default function ToggleCart() {
     return (
         <>
             <ButtonCart />

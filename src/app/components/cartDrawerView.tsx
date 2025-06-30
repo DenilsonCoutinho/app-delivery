@@ -7,7 +7,8 @@ import Button from "./ui/button/button";
 import { Minus, PlusIcon } from "lucide-react";
 import { useDrawer } from "@/lib/zustand/useDrawer";
 import { useTriggerResize } from "@/context/triggerResize";
-export default function ViewOrder() {
+import { useRouter } from "next/navigation";
+export default function CartDrawerView() {
     const { order, setOrder } = useOrder()
     const { isClosed, setIsClosed } = useDrawer()
     const { inneHeigth } = useTriggerResize()
@@ -42,6 +43,9 @@ export default function ViewOrder() {
             return [...prev, { ...item, qtd: 1 }]
         })
     }
+
+    const route = useRouter()
+
     return (
         <>
             <Drawer.Root>
@@ -50,7 +54,7 @@ export default function ViewOrder() {
                         <Drawer.Closer onClose={() => setIsClosed(!isClosed)} />
                         <Drawer.Title>Seus pedidos</Drawer.Title>
                     </div>
-                    <div style={{ height: inneHeigth - 120 + "px" }} className=" overflow-y-auto shadow-xs">
+                    <div style={{ height: inneHeigth - 120 + "px" }} className=" h-full overflow-y-auto shadow-xs">
                         {order.length == 0 ?
                             <div className="flex justify-center items-center h-full">
                                 <p className="text-slate-500">Sem produtos no carrinho</p>
@@ -88,8 +92,8 @@ export default function ViewOrder() {
                             TOTAL:{formatToBrl(fullPrice)}
                         </h1>
                         <div className="flex justify-between items-center mt-2">
-                            <Button className=" bg-primary text-white rounded-2xl p-2 text-xl">Pedir mais</Button>
-                            <Button onClick={() => console.log("aqui")} disabled={order.length === 0 ? true : false} className={`${order.length === 0 ? "cursor-not-allowed" : ""} bg-confirm text-white rounded-2xl p-2 text-xl`}>Finalizar Pedido</Button>
+                            <Button onClick={() => setIsClosed(!isClosed)} className=" bg-primary text-white rounded-2xl p-2 text-xl cursor-pointer">Pedir mais</Button>
+                            <Button onClick={() => route.push("/cart-page")} disabled={order.length === 0 ? true : false} className={`${order.length === 0 ? "cursor-not-allowed" : "cursor-pointer"} bg-confirm text-white rounded-2xl p-2 text-xl`}>Finalizar Pedido</Button>
                         </div>
                     </Drawer.Footer>
                 </Drawer.Content>
