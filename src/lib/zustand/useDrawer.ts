@@ -3,7 +3,7 @@ import { create } from 'zustand'
 
 interface UseDrawer {
     isClosed: boolean
-    setIsClosed: (isClosed: boolean) => void
+    setIsClosed: (isClosed: boolean ) => void
 }
 
 export const useDrawer = create<UseDrawer>()(

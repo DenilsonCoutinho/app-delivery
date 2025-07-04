@@ -6,8 +6,8 @@ export async function handleMercadoPagoPayment(paymentData: PaymentResponse) {
   const metadata = paymentData.metadata;
   const userEmail = metadata.user_email; // Os metadados do Mercado Pago são convertidos para snake_case
   const testeId = metadata.teste_id; // Os metadados do Mercado Pago são convertidos para snake_case
-console.log(userEmail)
-console.log(testeId)
+  console.log(userEmail)
+  console.log(testeId)
   // Faz alguma ação aqui - manda email pro usuario, libera acesso, erc.
 
   return;

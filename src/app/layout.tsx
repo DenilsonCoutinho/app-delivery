@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from 'react-toastify';
 import { TriggerResizeProvider } from "@/context/triggerResize";
+import Loading from "./components/ui/loading/loading";
+import { TriggerLoadingProvider } from "@/context/triggerLoading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,9 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TriggerResizeProvider>
-          {children}
-        </TriggerResizeProvider>
+        <TriggerLoadingProvider>
+          <TriggerResizeProvider>
+            <Loading />
+            {children}
+          </TriggerResizeProvider>
+        </TriggerLoadingProvider>
         <ToastContainer />
       </body>
     </html>

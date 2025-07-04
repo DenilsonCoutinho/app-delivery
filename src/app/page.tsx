@@ -4,6 +4,7 @@ import MenuPreview from "./components/menuPreview";
 import MenuOrder from "./components/menuOrder";
 import ToggleCart from "./components/toggleCart";
 import CartDrawerView from "./components/cartDrawerView";
+import Loading from "./components/ui/loading/loading";
 
 const kodchasan = Kodchasan({
   variable: "--font-geist-sans",

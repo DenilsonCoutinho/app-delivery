@@ -17,6 +17,7 @@ import { PlusIcon } from 'lucide-react';
 import { Product, useOrder } from '@/lib/zustand/useOrder';
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
+import { formatToBrl } from '@/lib/formatToBrl';
 gsap.registerPlugin(useGSAP);
 
 export default function MenuOrder() {
@@ -75,53 +76,40 @@ export default function MenuOrder() {
         type: "success"
     });
     return (
-        <div id='menu-order' className=" bg-gray-100 text-black ">
-            <div className='md:flex hidden md:h-96'>
-                <Swiper
-                    slidesPerView={3}
-                    spaceBetween={30}
-                    freeMode={true}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[FreeMode, Pagination]}
-                    className="mySwiper select-none max-w-[500px] bg-gray-100"
-                >
-                    {
-                        products.map((product) => (
-                            <SwiperSlide key={product.id} className='flex flex-col items-center justify-center max-w-96 mx-auto relative'>
-                                <div
-                                >
-                                    <Image src={product.image} alt={product.title} className=' w-full mx-auto' />
-                                </div>
-                                <h3 className='font-bold text-sm'>{product.title}</h3>
-                                <div className='flex items-center justify-between'>
-                                    <h3 className='font-bold text-sm'>{product.price}</h3>
-                                    <div onClick={() => { cartOrder(product); notify() }} className='bg-primary cursor-pointer active:scale-95 duration-300 w-7 h-7 rounded-full flex items-center justify-center  '>
-                                        <PlusIcon className='text-white ' />
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                        ))
-                    }
-                </Swiper>
-            </div>
-            <div className='md:hidden flex flex-col gap-14'>
+        <div id='menu-order' className=" bg-gray-100 text-black pb-28 ">
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1000px] mx-auto px-2'>
                 {
                     products.map((product) => (
-                        <div key={product.id} className='flex  flex-col items-center justify-center max-w-96 mx-auto relative'>
-                            <div
-                            >
-                                <Image src={product.image} alt={product.title} className=' w-40 mx-auto' />
-                            </div>
-                            <h3 className='font-bold text-sm'>{product.title}</h3>
-                            <div className='flex items-center justify-between w-40 gap-5 mx-auto '>
-                                <h3 className='font-bold text-sm'>{product.price}</h3>
-                                <div onClick={() => { cartOrder(product); notify() }} className='bg-primary cursor-pointer active:scale-95 duration-300 w-7 h-7 rounded-full flex items-center justify-center  '>
-                                    <PlusIcon className='text-white ' />
+                        <div
+                            key={product.id}
+                            className="flex justify-between items-center p-4 rounded-lg shadow-sm border border-gray-200 bg-white"
+                        >
+                            <div className="flex flex-col gap-1 max-w-[60%]">
+                                <h3 className="text-sm font-semibold leading-tight">{product.title}</h3>
+                                <p className="text-sm text-gray-600">{product.subtitle}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className="text-sm font-bold text-primary">
+                                        {formatToBrl(product.priceInCents * product.qtd)}
+                                    </span>
+                                     <button
+                                    onClick={() => { cartOrder(product); notify(); }}
+                                    className="bg-primary w-8 h-8 rounded-full flex items-center justify-center active:scale-95 transition-transform duration-300"
+                                >
+                                    <PlusIcon className="text-white w-4 h-4" />
+                                </button>
                                 </div>
                             </div>
+
+                            <div className="flex items-center gap-3">
+                                <Image
+                                    src={product.image}
+                                    alt={product.title}
+                                    className="w-24 h-24 object-cover rounded-md"
+                                />
+                               
+                            </div>
                         </div>
+
                     ))
                 }
             </div>

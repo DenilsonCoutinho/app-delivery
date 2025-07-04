@@ -18,7 +18,6 @@ export async function POST(request: Request) {
         console.log("payment")
         const payment = new Payment(mpClient);
         const paymentData = await payment.get({ id: data.id });
-        console.log(paymentData)
         if (
           paymentData.status === "approved" || // Pagamento por cartão OU
           paymentData.date_approved !== null // Pagamento por Pix

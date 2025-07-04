@@ -1,49 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Preference } from "mercadopago";
 import mpClient from "@/lib/mercado-pago";
+import { Product } from "@/lib/zustand/useOrder";
 
 export async function POST(req: NextRequest) {
-  const { testeId, userEmail } = await req.json();
+  const { testeId, userEmail, items } = await req.json();
 
   try {
+
     const preference = new Preference(mpClient);
 
     const createdPreference = await preference.create({
       body: {
-        // external_reference: testeId, // IMPORTANTE: Isso aumenta a pontuação da sua integração com o Mercado Pago - É o id da compra no nosso sistema
+        external_reference: testeId, // IMPORTANTE: Isso aumenta a pontuação da sua integração com o Mercado Pago - É o id da compra no nosso sistema
         metadata: {
           testeId, // O Mercado Pago converte para snake_case, ou seja, testeId vai virar teste_id
           userEmail: userEmail,
-          // plan: '123'
-          //etc
         },
-        ...(userEmail && {
-          payer: {
-            email: userEmail,
-          },
-        }),
 
-        items: [
-          {
-            id: "id-do-seu-produto",
-            description: "Descrição do produto",
-            title: "Nome do produto",
-            quantity: 1,
-            unit_price: 1,
-            currency_id: "BRL",
-            category_id: "category", // Recomendado inserir, mesmo que não tenha categoria - Aumenta a pontuação da sua integração com o Mercado Pago
-          },
-        ],
+        items: (items as Product[]).map((product) => ({
+          id: String(product.id),
+          title: product.title,
+          description:  product.subtitle ?? "Sem descrição",
+          quantity: product.qtd,
+          unit_price: product.priceInCents / 100,
+          currency_id: "BRL",
+          category_id: "category",
+        })),
         payment_methods: {
           // Descomente para desativar métodos de pagamento
-          //   excluded_payment_methods: [
-          //     {
-          //       id: "bolbradesco",
-          //     },
-          //     {
-          //       id: "pec",
-          //     },
-          //   ],
+            excluded_payment_methods: [
+              {
+                id: "bolbradesco",
+              },
+              {
+                id: "ticket",
+              },
+            ],
           //   excluded_payment_types: [
           //     {
           //       id: "debit_card",
@@ -56,7 +49,7 @@ export async function POST(req: NextRequest) {
         },
         auto_return: "approved",
         back_urls: {
-          success: `${req.headers.get("origin")}/?status=sucesso`,
+          success: `${req.headers.get("origin")}/checkout?status=sucesso`,
           failure: `${req.headers.get("origin")}/?status=falha`,
           pending: `${req.headers.get("origin")}/api/mercado-pago/pending`, // Criamos uma rota para lidar com pagamentos pendentes
         },

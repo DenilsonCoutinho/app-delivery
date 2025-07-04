@@ -8,6 +8,7 @@ import { Minus, PlusIcon } from "lucide-react";
 import { useDrawer } from "@/lib/zustand/useDrawer";
 import { useTriggerResize } from "@/context/triggerResize";
 import { useRouter } from "next/navigation";
+import { scrollToElement } from "@/lib/useScrollIntoView";
 export default function CartDrawerView() {
     const { order, setOrder } = useOrder()
     const { isClosed, setIsClosed } = useDrawer()
@@ -73,26 +74,25 @@ export default function CartDrawerView() {
                                     <div className="flex flex-row justify-between w-full">
                                         <div className="flex flex-col items-start">
                                             <div className="flex flex-row gap-1 items-start">
-                                                <h2 className="text-xs font-semibold text-gray-400">X{item.qtd}</h2>
-                                                <h2 className="text-xs font-bold text-gray-400">{item.title}</h2>
+                                                <h2 className="text-xs font-semibold text-gray-700">X{item.qtd}</h2>
+                                                <h2 className="text-xs font-bold text-gray-700">{item.title}</h2>
                                             </div>
                                             <h2 className="text-sm font-semibold text-gray-400">{formatToBrl(item.priceInCents * item.qtd)}</h2>
                                         </div>
                                         <div className="flex  gap-3">
-                                            <Button onClick={() => decremetItem(item)} className="Drecrement-Button cursor-pointer active:scale-95 duration-75 flex justify-center items-center bg-red-500 w-7 h-7 rounded-full"><Minus className="text-white" /></Button>
-                                            <Button onClick={() => incrementItem(item)} className="Increment-Button cursor-pointer active:scale-95 duration-75 flex justify-center items-center bg-green-500 w-7 h-7 rounded-full"><PlusIcon className="text-white" /></Button>
+                                            <Button onClick={() => decremetItem(item)} className="Drecrement-Button shadow-md shadow-slate-600 cursor-pointer active:scale-95 duration-75 flex justify-center items-center bg-red-500 w-7 h-7 rounded-full"><Minus className="text-white" /></Button>
+                                            <Button onClick={() => incrementItem(item)} className="Increment-Button shadow-md shadow-slate-600 cursor-pointer active:scale-95 duration-75 flex justify-center items-center bg-green-500 w-7 h-7 rounded-full"><PlusIcon className="text-white" /></Button>
                                         </div>
                                     </div>
                                 </div>
                             ))}
-
                     </div>
                     <Drawer.Footer>
-                        <h1 className="text-center text-xl text-black">
+                        <span className="text-center text-xl text-black">
                             TOTAL:{formatToBrl(fullPrice)}
-                        </h1>
+                        </span>
                         <div className="flex justify-between items-center mt-2">
-                            <Button onClick={() => setIsClosed(!isClosed)} className=" bg-primary text-white rounded-2xl p-2 text-xl cursor-pointer">Pedir mais</Button>
+                            <Button onClick={() => {setIsClosed(!isClosed);scrollToElement("menu-order")}} className=" bg-primary text-white rounded-2xl p-2 text-xl cursor-pointer">Pedir mais</Button>
                             <Button onClick={() => route.push("/cart-page")} disabled={order.length === 0 ? true : false} className={`${order.length === 0 ? "cursor-not-allowed" : "cursor-pointer"} bg-confirm text-white rounded-2xl p-2 text-xl`}>Finalizar Pedido</Button>
                         </div>
                     </Drawer.Footer>

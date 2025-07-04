@@ -11,6 +11,7 @@ export type Product = {
   image: StaticImageData;
   qtd: number
   final_price: number | undefined
+  descriptio?:string
 };
 
 interface UseOrder {

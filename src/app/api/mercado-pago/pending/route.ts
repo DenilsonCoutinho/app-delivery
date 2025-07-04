@@ -17,10 +17,10 @@ export async function GET(request: Request) {
 
   const payment = new Payment(mpClient);
   const paymentData = await payment.get({ id: paymentId });
-
+  console.log("aqui",paymentData)
   if (paymentData.status === "approved" || paymentData.date_approved !== null) {
     // Pagamentos já foi realizado. redirecionamos para a página de sucesso
-    return NextResponse.redirect(new URL(`/?status=sucesso`, request.url));
+    return NextResponse.redirect(new URL(`/checkout`, request.url));
   }
 
   // Pagamentos pendentes. redirecionamos para a página inicial

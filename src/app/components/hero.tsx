@@ -7,10 +7,23 @@ import acai from '@/assets/hero-section/Acai-fruta-e-folhas-grande-2 1.png'
 import Image from 'next/image'
 import gsap from 'gsap'; // <-- import GSAP
 import { useGSAP } from '@gsap/react';
+import { useEffect } from 'react'
+import { useSearchParams } from 'next/navigation';
+import { scrollToElement } from '@/lib/useScrollIntoView'
+import CreateIdentificationUser from '../../../actions/createIdentificationUser'
 gsap.registerPlugin(useGSAP);
 
 export default function Hero() {
+    const searchParams = useSearchParams();
 
+    useEffect(() => {
+        const toScroll = searchParams.get('toElement');
+        if (!toScroll) return
+        async function scrollTrigger() {
+            await scrollToElement(toScroll as string)
+        }
+        scrollTrigger()
+    }, [])
     useGSAP(() => {
         gsap.fromTo('.fruit-acai', { opacity: 0, }, { opacity: 1, x: 0, rotation: 360, duration: 4, ease: "power2.out", }); // <-- animation for the fruit
         gsap.to('.acai_na_tigela', { duration: 2, ease: "back.inOut", y: -10, scale: 1.01, yoyo: true, repeat: -1, }); // <-- animation for the leaf

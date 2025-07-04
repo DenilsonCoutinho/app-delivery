@@ -4,15 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@mercadopago/sdk-react": "^1.0.2",
+    "@prisma/client": "^6.11.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.523.0",
     "mercadopago": "^2.8.0",
@@ -37,6 +39,7 @@
     "@types/react-dom": "^19",
     "jest": "^30.0.2",
     "jest-environment-jsdom": "^30.0.2",
+    "prisma": "^6.11.0",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
