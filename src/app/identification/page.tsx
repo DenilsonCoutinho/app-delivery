@@ -2,17 +2,27 @@
 
 import { maskPhone } from '@/lib/maskPhone';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../components/ui/button/button';
 import CreateIdentificationUser from '../../../actions/createIdentificationUser';
 import GetIdentification from '@/services/getDataIdentification';
 import { useIdentification } from '@/lib/zustand/useIdentification';
 import { useTriggerLoading } from '@/context/triggerLoading';
+import { useOrder } from '@/lib/zustand/useOrder';
 
 export default function Identification() {
+    useEffect(() => {
+        setLoading(true)
+        if (order.length === 0){
+            return route.replace("/?toElement=menu-order")
+        }
+        setLoading(false)
+        
+    }, [])
     const [userDataExist, setUserDataExist] = useState<boolean>()
     const { setLoading } = useTriggerLoading()
     const { name, setName, number, setNumber } = useIdentification()
+    const { order } = useOrder()
 
     const isValid = number.trim() !== '' && name.trim() !== '';
     const route = useRouter()
@@ -27,16 +37,16 @@ export default function Identification() {
             setUserDataExist(true)
             setLoading(false)
             return
-        } 
-            setUserDataExist(false)
-            setLoading(false)
+        }
+        setUserDataExist(false)
+        setLoading(false)
     }
     async function identifyUserExist() {
         setLoading(true)
         if (!isValid) {
             return
         }
-            
+
         if (userDataExist || number) {
             route.push("/checkout")
             setLoading(false)

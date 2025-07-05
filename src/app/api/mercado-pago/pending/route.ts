@@ -24,5 +24,5 @@ export async function GET(request: Request) {
   }
 
   // Pagamentos pendentes. redirecionamos para a página inicial
-  return NextResponse.redirect(new URL("/teste", request.url));
+  return NextResponse.redirect(new URL("/", request.url));
 }

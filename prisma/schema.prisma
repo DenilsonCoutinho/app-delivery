@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -20,15 +21,22 @@ model User {
   Order  Order[]
 }
 
+enum OrderStatus {
+  NEW // pedido criado, mas não visto
+  PENDING // em preparo ou aguardando pagamento
+  FINISHED // entregue ou finalizado
+  CANCELLED // cancelado pelo cliente ou sistema
+}
+
 model Order {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   total     Int // Total em centavos
 
-  user   User @relation(fields: [userId], references: [id])
+  user   User        @relation(fields: [userId], references: [id])
   userId Int
-
-  items OrderItem[]
+  status OrderStatus @default(NEW) // novo campo
+  items  OrderItem[]
 }
 
 model OrderItem {

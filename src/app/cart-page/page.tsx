@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import acai_na_tigela from '@/assets/hero-section/açai-na-tigela.png'
 import { formatToBrl } from '@/lib/formatToBrl';
 import { useDrawer } from '@/lib/zustand/useDrawer';
+import { useTriggerResize } from '@/context/triggerResize';
 
 
 export default function CartPage() {
@@ -41,9 +42,10 @@ export default function CartPage() {
         return acc + current;
     }, 0);
     const route = useRouter()
-    const {setIsClosed,isClosed} = useDrawer()
+    const { setIsClosed, isClosed } = useDrawer()
+    const { inneHeigth } = useTriggerResize()
     return (
-        <div className="min-h-screen bg-white flex flex-col">
+        <div className="min-h-dvh bg-white flex flex-col">
             <div className="max-w-xl mx-auto w-full px-4">
                 <div className="flex items-center py-4 border-slate-400 border-b">
                     <Button onClick={() => route.push('/')} className="text-xl cursor-pointer text-slate-800">⬅</Button>
@@ -79,14 +81,14 @@ export default function CartPage() {
                 ))}
 
                 <div className="text-center my-6">
-                    <Button onClick={()=>{route.push("/?toElement=menu-order");setIsClosed(!isClosed)}} className="cursor-pointer border-2 border-primary text-slate-900 px-6 py-2 rounded-md">
+                    <Button onClick={() => { route.push("/?toElement=menu-order"); setIsClosed(!isClosed) }} className="cursor-pointer border-2 border-primary text-slate-900 px-6 py-2 rounded-md">
                         Adicionar mais produtos
                     </Button>
                 </div>
             </div>
 
             <div className="mt-auto w-full max-w-xl mx-auto p-4">
-                <Button onClick={()=>route.push("/identification")} className="bg-primary cursor-pointer text-white font-bold w-full py-3 rounded-md relative">
+                <Button onClick={() => route.push("/identification")} className="bg-primary cursor-pointer text-white font-bold w-full py-3 rounded-md relative">
                     Avançar {formatToBrl(fullPrice)}
                     <Image src={acai_na_tigela} alt='acai_na_tigela' className='absolute w-10 top-0' />
                     <Image src={acai_na_tigela} alt='acai_na_tigela' className='absolute w-10 top-0 right-0' />

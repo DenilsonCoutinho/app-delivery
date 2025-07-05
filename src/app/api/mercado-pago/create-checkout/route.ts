@@ -4,7 +4,7 @@ import mpClient from "@/lib/mercado-pago";
 import { Product } from "@/lib/zustand/useOrder";
 
 export async function POST(req: NextRequest) {
-  const { testeId, userEmail, items } = await req.json();
+  const { testeId, userEmail, items,number } = await req.json();
 
   try {
 
@@ -16,10 +16,11 @@ export async function POST(req: NextRequest) {
         metadata: {
           testeId, // O Mercado Pago converte para snake_case, ou seja, testeId vai virar teste_id
           userEmail: userEmail,
+          items:items,
+          number:number
         },
 
-        items: (items as Product[]).map((product) => ({
-          id: String(product.id),
+        items: (items as any).map((product:any) => ({
           title: product.title,
           description:  product.subtitle ?? "Sem descrição",
           quantity: product.qtd,

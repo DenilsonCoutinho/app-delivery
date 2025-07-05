@@ -10,11 +10,12 @@ import { useGSAP } from '@gsap/react';
 import { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation';
 import { scrollToElement } from '@/lib/useScrollIntoView'
-import CreateIdentificationUser from '../../../actions/createIdentificationUser'
+import { useTriggerLoading } from '@/context/triggerLoading'
 gsap.registerPlugin(useGSAP);
 
 export default function Hero() {
     const searchParams = useSearchParams();
+    const { setLoading } = useTriggerLoading()
 
     useEffect(() => {
         const toScroll = searchParams.get('toElement');
@@ -22,6 +23,7 @@ export default function Hero() {
         async function scrollTrigger() {
             await scrollToElement(toScroll as string)
         }
+        setLoading(false)
         scrollTrigger()
     }, [])
     useGSAP(() => {
