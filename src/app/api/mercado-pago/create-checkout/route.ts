@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Preference } from "mercadopago";
 import mpClient from "@/lib/mercado-pago";
-import { Product } from "@/lib/zustand/useOrder";
 
 export async function POST(req: NextRequest) {
-  const { testeId, userEmail, items,number,name,paymentForm } = await req.json();
+  const { testeId, userEmail, items, number, name, paymentForm } = await req.json();
 
   try {
 
@@ -16,15 +15,15 @@ export async function POST(req: NextRequest) {
         metadata: {
           testeId, // O Mercado Pago converte para snake_case, ou seja, testeId vai virar teste_id
           userEmail: userEmail,
-          items:items,
-          number:number,
-          name:name,
-          paymentForm:paymentForm
+          items: items,
+          number: number,
+          name: name,
+          paymentForm: paymentForm
         },
 
-        items: (items as any).map((product:any) => ({
+        items: (items as any).map((product: any) => ({
           title: product.title,
-          description:  product.subtitle ?? "Sem descrição",
+          description: product.subtitle ?? "Sem descrição",
           quantity: product.qtd,
           unit_price: product.priceInCents / 100,
           currency_id: "BRL",
@@ -32,14 +31,14 @@ export async function POST(req: NextRequest) {
         })),
         payment_methods: {
           // Descomente para desativar métodos de pagamento
-            excluded_payment_methods: [
-              {
-                id: "bolbradesco",
-              },
-              {
-                id: "ticket",
-              },
-            ],
+          excluded_payment_methods: [
+            {
+              id: "bolbradesco",
+            },
+            {
+              id: "ticket",
+            },
+          ],
           //   excluded_payment_types: [
           //     {
           //       id: "debit_card",
@@ -52,7 +51,7 @@ export async function POST(req: NextRequest) {
         },
         auto_return: "approved",
         back_urls: {
-          success: `${req.headers.get("origin")}/checkout?status=sucesso`,
+          success: `${req.headers.get("origin")}/accompany?status=sucesso`,
           failure: `${req.headers.get("origin")}/?status=falha`,
           pending: `${req.headers.get("origin")}/api/mercado-pago/pending`, // Criamos uma rota para lidar com pagamentos pendentes
         },

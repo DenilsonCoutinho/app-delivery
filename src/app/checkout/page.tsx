@@ -15,7 +15,14 @@ import { maskPhone } from "@/lib/maskPhone"
 import UpsertIdentification from "@/services/upsertIdentification"
 import { error } from "console"
 import { toast } from "react-toastify"
+import { useRouter } from "next/navigation"
 export default function Checkout() {
+    useEffect(() => {
+        setLoading(false)
+        if (order.length === 0) {
+            return route.replace("/?toElement=menu-order")
+        }
+    }, [])
     const { setLoading } = useTriggerLoading()
     const { order } = useOrder()
     const { isClosed, setIsClosed } = useModal()
@@ -29,9 +36,8 @@ export default function Checkout() {
         title: "Endereço de retirada",
         value: "Rua Bernado Welter, 346 - COSTA E SILVA, Joinville",
     }
-    useEffect(() => {
-        setLoading(false)
-    }, [])
+    const route = useRouter()
+    
     const priceInCents = order?.map((i) => {
         return i?.priceInCents * i.qtd
     })
@@ -70,7 +76,7 @@ export default function Checkout() {
                 return
             }
             const isNameExiste = await nameExist()
-            if (isNameExiste?.name === name){
+            if (isNameExiste?.name === name) {
                 setIsClosed(!isClosed)
                 toast(`Nenhum dado foi alterado`, {
                     type: "info"
@@ -104,8 +110,8 @@ export default function Checkout() {
                 userEmail: "contact.denilsoncoutinho@gmail.com",
                 items: order,
                 number: number,
-                name:name,
-                paymentForm:formPaymentIsSelected
+                name: name,
+                paymentForm: formPaymentIsSelected
             })
             return
         }
@@ -163,7 +169,7 @@ export default function Checkout() {
                     </div>
                 </div>
 
-                <Button disabled={!formPaymentIsSelected} onClick={() =>createCheckoutOrNot()} className={`w-full mt-4 bg-primary ${formPaymentIsSelected ? "cursor-pointer" : "cursor-not-allowed opacity-55"} text-white py-3 rounded font-semibold`}>
+                <Button disabled={!formPaymentIsSelected} onClick={() => createCheckoutOrNot()} className={`w-full mt-4 bg-primary ${formPaymentIsSelected ? "cursor-pointer" : "cursor-not-allowed opacity-55"} text-white py-3 rounded font-semibold`}>
                     Confirmar
                 </Button>
             </div>

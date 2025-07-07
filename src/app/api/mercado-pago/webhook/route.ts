@@ -68,10 +68,7 @@ export async function POST(request: Request) {
           // await handleMercadoPagoPayment(paymentData);
         }
         break;
-      // case "subscription_preapproval": Eventos de assinatura
-      //   console.log("Subscription preapproval event");
-      //   console.log(data);
-      //   break;
+    
       default:
         console.log("Unhandled event type:", type);
     }
