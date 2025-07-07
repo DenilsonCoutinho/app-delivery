@@ -40,9 +40,9 @@ export default function FormPayment({ formPayment }: FormPaymentProps) {
                             <input
                                 type="checkbox"
                                 name="payment"
-                                value="DINHEIRO"
-                                onChange={() => selectFormPayment("dinheiro")}
-                                checked={paymentMethod === "dinheiro"}
+                                value="PAGAR NA RETIRADA"
+                                onChange={() => selectFormPayment("pagar na retirada")}
+                                checked={paymentMethod === "pagar na retirada"}
                             />
                             <div className="flex items-center gap-2">
                                 <span className="text-blue-600 text-lg"><Image src={dinheiro} width={20} height={20} alt="dinheiro" /></span>

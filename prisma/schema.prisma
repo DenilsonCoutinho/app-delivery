@@ -32,7 +32,7 @@ model Order {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   total     Int // Total em centavos
-
+  payment_form String?
   user   User        @relation(fields: [userId], references: [id])
   userId Int
   status OrderStatus @default(NEW) // novo campo

@@ -97,14 +97,15 @@ export default function Checkout() {
     }
 
     const { createMercadoPagoCheckout } = useMercadoPago();
-
     async function createCheckoutOrNot() {
         if (formPaymentIsSelected === "pix" || formPaymentIsSelected === "cartão") {
             createMercadoPagoCheckout({
                 testeId: idOrder,
                 userEmail: "contact.denilsoncoutinho@gmail.com",
                 items: order,
-                number: number
+                number: number,
+                name:name,
+                paymentForm:formPaymentIsSelected
             })
             return
         }

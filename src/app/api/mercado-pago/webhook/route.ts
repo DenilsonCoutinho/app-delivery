@@ -6,6 +6,7 @@ import mpClient, { verifyMercadoPagoSignature } from "@/lib/mercado-pago";
 import { handleMercadoPagoPayment } from "@/server/mercado-pago/handle-payment";
 import CreateOrder from "../../../../../actions/createOrder";
 import { Product } from "@/lib/zustand/useOrder";
+import { formatToBrl } from "@/lib/formatToBrl";
 
 export async function POST(request: Request) {
   try {
@@ -26,6 +27,8 @@ export async function POST(request: Request) {
 
           const rawItems = paymentData.metadata.items;
           const number = paymentData.metadata.number;
+          const name = paymentData.metadata.name;
+          const paymentForm = paymentData.metadata.payment_form;
           const orders = rawItems.map((item: any) => ({
             title: item.title,
             subtitle: item.subtitle,
@@ -40,7 +43,28 @@ export async function POST(request: Request) {
             return i?.priceInCents * i.qtd
           })
           const priceReduce = priceInCents.reduce((acumulador: any, numero: any) => acumulador + numero, 0);
-          await CreateOrder(orders, OnlyNumber, priceReduce)
+          const createOrder = await CreateOrder(orders, OnlyNumber, priceReduce,paymentForm)
+          const ordersToN8n = rawItems.map((item: any) => ({
+            title: item.title,
+            subtitle: item.subtitle,
+            qtd: item.qtd,
+            price: item.price,
+            priceInCents: item?.price_in_cents,
+            final_price: formatToBrl(item?.price_in_cents * item.qtd) ,
+          }));
+          await fetch('http://localhost:5678/webhook-test/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
+            method: 'POST', // ou 'GET' dependendo de como você configurou o webhook
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: name,
+              number: OnlyNumber,
+              orders:ordersToN8n,
+              totPrice:priceReduce,
+              id:createOrder?.id
+            }),
+          });
           // await handleMercadoPagoPayment(paymentData);
         }
         break;
