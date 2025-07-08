@@ -20,12 +20,13 @@ interface Order {
   status: OrderStatus;
 }
 
-export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[] } }) {
+export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[] } | undefined }) {
   const [orders, setOrders] = useState<Order[]>([]);
   useEffect(() => {
     // async function fetchOrders() {
     // const res = await GetOrderByUser() // você cria essa rota
     // console.log(res)
+    if (!getOrders?.orders) return
     setOrders(getOrders?.orders);
     // }
 

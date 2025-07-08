@@ -6,7 +6,7 @@ export default async function OrderBoardWrapper() {
         method: "GET",
         next: { tags: ["orders"] }
     })
-     const dataOrder = await getOrders.json() || []
+     const dataOrder = await getOrders.json() || undefined
     return (
         <>
             <OrderBoard getOrders={dataOrder} />
