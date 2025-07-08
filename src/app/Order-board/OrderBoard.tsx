@@ -16,7 +16,7 @@ interface Order {
     name: string;
     number: string;
   };
-  payment_form:string
+  payment_form: string
   status: OrderStatus;
 }
 
@@ -78,23 +78,23 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
   );
 
   async function handleAdvance(order: Order) {
-    console.log(order)
-    const status = order.status === "NEW" ? "PENDING" : order.status === "PENDING" ? "FINISHED" :"CANCELLED"
-    await UpdateOrder(order.id,status)
-    return
-    const nextStatus: OrderStatus =
-      order.status === 'NEW' ? 'PENDING' : 'FINISHED';
+    try {
+      const status = order.status === "NEW" ? "PENDING" : order.status === "PENDING" ? "FINISHED" : "CANCELLED"
+      await UpdateOrder(order.id, status)
+      await fetch('https://n8n-app-geli.fly.dev/webhook/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
+        method: 'POST', // ou 'GET' dependendo de como você configurou o webhook
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          statusOrder: status,
+          number: order?.user?.number,
+          name: order?.user?.name
+        }),
+      });
+    } catch (error) {
+      alert(error)
+    }
 
-    await fetch(`/api/orders/${order.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ status: nextStatus }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === order.id ? { ...o, status: nextStatus } : o
-      )
-    );
   }
 }

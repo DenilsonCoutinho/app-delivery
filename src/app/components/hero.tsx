@@ -7,13 +7,13 @@ import acai from '@/assets/hero-section/Acai-fruta-e-folhas-grande-2 1.png'
 import Image from 'next/image'
 import gsap from 'gsap'; // <-- import GSAP
 import { useGSAP } from '@gsap/react';
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation';
 import { scrollToElement } from '@/lib/useScrollIntoView'
 import { useTriggerLoading } from '@/context/triggerLoading'
 gsap.registerPlugin(useGSAP);
 
-export default function Hero() {
+function Hero() {
     const searchParams = useSearchParams();
     const { setLoading } = useTriggerLoading()
 
@@ -50,5 +50,13 @@ export default function Hero() {
 
             </div>
         </div>
+    )
+}
+
+export default function WrappedHero() {
+    return (
+        <Suspense fallback={<>Carregando...</>}>
+            <Hero />
+        </Suspense>
     )
 }

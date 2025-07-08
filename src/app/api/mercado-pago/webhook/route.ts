@@ -52,7 +52,7 @@ export async function POST(request: Request) {
             priceInCents: item?.price_in_cents,
             final_price: formatToBrl(item?.price_in_cents * item.qtd) ,
           }));
-          await fetch('http://localhost:5678/webhook-test/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
+          await fetch('https://n8n-app-geli.fly.dev/webhook/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
             method: 'POST', // ou 'GET' dependendo de como você configurou o webhook
             headers: {
               'Content-Type': 'application/json',

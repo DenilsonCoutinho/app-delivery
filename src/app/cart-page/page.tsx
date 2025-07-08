@@ -7,8 +7,6 @@ import { useRouter } from 'next/navigation';
 import acai_na_tigela from '@/assets/hero-section/açai-na-tigela.png'
 import { formatToBrl } from '@/lib/formatToBrl';
 import { useDrawer } from '@/lib/zustand/useDrawer';
-import { useTriggerResize } from '@/context/triggerResize';
-
 
 export default function CartPage() {
     const { order, setOrder } = useOrder()
@@ -27,7 +25,6 @@ export default function CartPage() {
             const itemExist = prev.find(e => e.id === item.id)
             if (itemExist) {
                 if (itemExist.qtd <= 1) {
-                    console.log(itemExist)
                     return prev.filter(e => e.id !== item.id)
                 }
                 return prev.map(e => e.id === itemExist.id ? { ...e, qtd: e.qtd - 1 } : e)
@@ -35,15 +32,14 @@ export default function CartPage() {
             return []
         })
     }
-    const priceInCents = order?.map((i) => {
+    const PRICE_IN_CENTS = order?.map((i) => {
         return i?.priceInCents * i.qtd
     })
-    const fullPrice = priceInCents.reduce((acc, current) => {
+    const FULL_PRICE = PRICE_IN_CENTS.reduce((acc, current) => {
         return acc + current;
     }, 0);
     const route = useRouter()
     const { setIsClosed, isClosed } = useDrawer()
-    const { inneHeigth } = useTriggerResize()
     return (
         <div className="min-h-dvh bg-white flex flex-col">
             <div className="max-w-xl mx-auto w-full px-4">
@@ -89,7 +85,7 @@ export default function CartPage() {
 
             <div className="mt-auto w-full max-w-xl mx-auto p-4">
                 <Button onClick={() => route.push("/identification")} className="bg-primary cursor-pointer text-white font-bold w-full py-3 rounded-md relative">
-                    Avançar {formatToBrl(fullPrice)}
+                    Avançar {formatToBrl(FULL_PRICE)}
                     <Image src={acai_na_tigela} alt='acai_na_tigela' className='absolute w-10 top-0' />
                     <Image src={acai_na_tigela} alt='acai_na_tigela' className='absolute w-10 top-0 right-0' />
                 </Button>

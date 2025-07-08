@@ -9,15 +9,17 @@ import GetIdentification from '@/services/getDataIdentification';
 import { useIdentification } from '@/lib/zustand/useIdentification';
 import { useTriggerLoading } from '@/context/triggerLoading';
 import { useOrder } from '@/lib/zustand/useOrder';
+import { toast } from 'react-toastify';
+import UpsertIdentification from '@/services/upsertIdentification';
 
 export default function Identification() {
     useEffect(() => {
         setLoading(true)
-        if (order.length === 0){
+        if (order.length === 0) {
             return route.replace("/?toElement=menu-order")
         }
         setLoading(false)
-        
+
     }, [])
     const [userDataExist, setUserDataExist] = useState<boolean>()
     const { setLoading } = useTriggerLoading()
@@ -27,36 +29,91 @@ export default function Identification() {
     const isValid = number.trim() !== '' && name.trim() !== '';
     const route = useRouter()
 
+    // async function nameExist() {
+    //     if (number.length < 15) return
+    //     setLoading(true)
+    //     const OnlyNumber = number.replace(/[ \-\(\)]/g, "")
+    //     const userExist = await GetIdentification(OnlyNumber)
+    //     if (userExist?.number) {
+    //         setName(userExist.name)
+    //         setUserDataExist(true)
+    //         setLoading(false)
+    //         return
+    //     }
+    //     setUserDataExist(false)
+    //     setLoading(false)
+    // }
+    // async function identifyUserExist() {
+    //     if (number.length < 15) {
+    //         return toast(`Número de telefone incompleto!`, {
+    //             type: "error"
+    //         });
+    //     }
+    //     setLoading(true)
+    //     if (!isValid) {
+    //         return
+    //     }
+
+    //     // if (userDataExist || number) {
+    //     //     route.push("/checkout")
+    //     //     setLoading(false)
+    //     //     return
+    //     // }
+    //     const OnlyNumber = number.replace(/[ \-\(\)]/g, "")
+    //     await CreateIdentificationUser(OnlyNumber, name)
+    //     route.push("/checkout")
+    // }
     async function nameExist() {
-        if (number.length < 15) return
+        if (number.length < 15) throw new Error("Número de telefone incompleto!")
         setLoading(true)
         const OnlyNumber = number.replace(/[ \-\(\)]/g, "")
         const userExist = await GetIdentification(OnlyNumber)
         if (userExist?.number) {
-            setName(userExist.name)
-            setUserDataExist(true)
+            // setName(userExist.name)
             setLoading(false)
-            return
+            return { nameExist: true, name: userExist.name }
         }
-        setUserDataExist(false)
         setLoading(false)
     }
-    async function identifyUserExist() {
-        setLoading(true)
-        if (!isValid) {
-            return
-        }
 
-        if (userDataExist || number) {
+
+    async function createOrUpdateUser() {
+        try {
+            setLoading(true)
+            if (!isValid) {
+                setLoading(false)
+                return   toast(`Dados inválidos!`, {
+                    type: "info"
+                });
+            }
+            const isNameExiste = await nameExist()
+            if (isNameExiste?.name === name) {
+                toast(`Nenhum dado foi alterado`, {
+                    type: "info"
+                });
             route.push("/checkout")
-            setLoading(false)
-            return
-        }
-        const OnlyNumber = number.replace(/[ \-\(\)]/g, "")
-        await CreateIdentificationUser(OnlyNumber, name)
-        route.push("/checkout")
-    }
 
+                return
+            }
+            const OnlyNumber = number.replace(/[ \-\(\)]/g, "")
+            await UpsertIdentification(OnlyNumber, name)
+            route.push("/checkout")
+
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            if (error instanceof Error) {
+                toast(`${error}`, {
+                    type: "error"
+                });
+                return
+            }
+            toast(`${error}`, {
+                type: "error"
+            });
+        }
+
+    }
     return (
         <div className="min-h-screen flex items- justify-center bg-white px-4">
             <div className="max-w-md w-full ">
@@ -96,7 +153,7 @@ export default function Identification() {
                     </div>
 
                     <Button
-                        onClick={() => identifyUserExist()}
+                        onClick={() => createOrUpdateUser()}
                         disabled={!isValid}
                         className={`w-full py-2 rounded-md cursor-pointer font-semibold text-white transition ${isValid ? 'bg-primary' : 'bg-gray-300 cursor-not-allowed'}`}>
                         Avançar
