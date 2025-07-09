@@ -36,7 +36,7 @@ export function ModalRoot({ children }: ModalContainerProps) {
         }
     }, [isClosed]);
     return (
-        <div className='modal-root hidden'>
+        <div className='modal-root hidden !z-[90]'>
             <div className="h-full  modal-orvelay-root w-full flex justify-center items-center fixed top-0 !z-[90]">
                 {children}
                 <div className="modal-orvelay-root bg-black opacity-40 fixed h-full w-full"></div>
