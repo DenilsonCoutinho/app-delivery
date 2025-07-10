@@ -15,7 +15,6 @@ import prdct3 from "@/assets/menu/WhatsApp Image 2025-06-21 at 14.20.07 1.svg";
 import Image from 'next/image';
 import { PlusIcon } from 'lucide-react';
 import { Product, useOrder } from '@/lib/zustand/useOrder';
-import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { formatToBrl } from '@/lib/formatToBrl';
 gsap.registerPlugin(useGSAP);

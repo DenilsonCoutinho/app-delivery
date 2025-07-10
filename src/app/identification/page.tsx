@@ -65,15 +65,15 @@ export default function Identification() {
     // }
     async function nameExist() {
         if (number.length < 15) throw new Error("Número de telefone incompleto!")
-        setLoading(true)
+
         const OnlyNumber = number.replace(/[ \-\(\)]/g, "")
         const userExist = await GetIdentification(OnlyNumber)
         if (userExist?.number) {
-            // setName(userExist.name)
-            setLoading(false)
+            setName(userExist.name)
+
             return { nameExist: true, name: userExist.name }
         }
-        setLoading(false)
+
     }
 
 
@@ -82,7 +82,7 @@ export default function Identification() {
             setLoading(true)
             if (!isValid) {
                 setLoading(false)
-                return   toast(`Dados inválidos!`, {
+                return toast(`Dados inválidos!`, {
                     type: "info"
                 });
             }
@@ -91,7 +91,7 @@ export default function Identification() {
                 toast(`Nenhum dado foi alterado`, {
                     type: "info"
                 });
-            route.push("/checkout")
+                route.push("/checkout")
 
                 return
             }
@@ -99,7 +99,6 @@ export default function Identification() {
             await UpsertIdentification(OnlyNumber, name)
             route.push("/checkout")
 
-            setLoading(false)
         } catch (error) {
             setLoading(false)
             if (error instanceof Error) {
@@ -133,7 +132,7 @@ export default function Identification() {
                             className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 text-black focus:ring-primary"
                             value={number}
                             maxLength={14}
-                            onBlur={() => nameExist()}
+                            onBlur={()=>nameExist()}
                             onChange={(e) => setNumber(maskPhone(e.target.value))}
                         />
                     </div>

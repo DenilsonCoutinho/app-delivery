@@ -107,7 +107,7 @@ export default function Checkout() {
         if (formPaymentIsSelected === "pix" || formPaymentIsSelected === "cartão") {
             createMercadoPagoCheckout({
                 testeId: idOrder,
-                userEmail: "contact.denilsoncoutinho@gmail.com",
+                // userEmail: "contact.denilsoncoutinho@gmail.com",
                 items: order,
                 number: number,
                 name: name,

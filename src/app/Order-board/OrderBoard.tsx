@@ -1,7 +1,7 @@
 'use client';
 
 import { formatToBrl } from '@/lib/formatToBrl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from '../components/ui/button/button';
 import UpdateOrder from '@/services/updateOrder';
 import { Modal } from '../components/ui/modal';
@@ -82,7 +82,7 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
       badgeBg: 'bg-gray-100 text-gray-800'
     }
   };
-
+//  const refModal = useRef()
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6">

@@ -32,12 +32,12 @@ export async function POST(req: NextRequest) {
         payment_methods: {
           // Descomente para desativar métodos de pagamento
           excluded_payment_methods: [
-            {
-              id: "bolbradesco",
-            },
-            {
-              id: "ticket",
-            },
+            // {
+            //   id: "bolbradesco",
+            // },
+            // {
+            //   id: "ticket",
+            // },
           ],
           //   excluded_payment_types: [
           //     {
