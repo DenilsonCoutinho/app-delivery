@@ -17,12 +17,23 @@ import { error } from "console"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
 import CreateOrder from "../../../actions/createOrder"
+import { isWithinWorkingHours } from "@/lib/estabilishmentIsOpen"
 export default function Checkout() {
     useEffect(() => {
         setLoading(false)
+        if (isWithinWorkingHours()) {
+            console.log('Estamos dentro do horário de atendimento!');
+        } else {
+            toast("Fora do horário de atendimento", {
+                type: "error"
+            });
+            return route.replace("/?toElement=menu-order")
+        }
         if (order.length === 0) {
             return route.replace("/?toElement=menu-order")
         }
+
+
     }, [])
     const { setLoading } = useTriggerLoading()
     const { order } = useOrder()
@@ -127,7 +138,7 @@ export default function Checkout() {
                 priceInCents: item?.priceInCents,
                 final_price: item.final_price,
             }));
-            
+
             const priceReduce = priceInCents.reduce((acumulador: any, numero: any) => acumulador + numero, 0);
             const createOrder = await CreateOrder(orders, OnlyNumber, priceReduce, formPaymentIsSelected!)
             const ordersToN8n = order.map((item: any) => ({

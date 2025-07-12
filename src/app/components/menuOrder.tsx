@@ -17,6 +17,7 @@ import { PlusIcon } from 'lucide-react';
 import { Product, useOrder } from '@/lib/zustand/useOrder';
 import { useGSAP } from '@gsap/react';
 import { formatToBrl } from '@/lib/formatToBrl';
+import { isWithinWorkingHours } from '@/lib/estabilishmentIsOpen';
 gsap.registerPlugin(useGSAP);
 
 export default function MenuOrder() {
@@ -27,7 +28,7 @@ export default function MenuOrder() {
             title: "Polpa de açai",
             subtitle: "Nosso açai vindo diretamente do norte, cada poupa rende até 2 litros.",
             price: "R$ 35,00",
-            priceInCents:3500,
+            priceInCents: 3500,
             qtd: 1,
             final_price: undefined
         },
@@ -58,6 +59,14 @@ export default function MenuOrder() {
     const { order, setOrder } = useOrder()
 
     async function cartOrder(orderCart: Product) {
+        if (isWithinWorkingHours()) {
+            console.log('Estamos dentro do horário de atendimento!');
+        } else {
+            return toast("Fora do horário de atendimento", {
+                type: "error"
+            });
+
+        }
         setOrder(prev => {
             const existing = prev.find(p => p.id === orderCart.id)
             if (existing) {
@@ -65,15 +74,16 @@ export default function MenuOrder() {
             }
             return [...prev, { ...orderCart, qtd: 1 }]
         })
+         toast("Produto adicionado!", {
+            type: "success"
+        });
     }
     useGSAP(() => {
         gsap.fromTo('.cart-icon', { scale: 1 }, { scale: 1.2, duration: 0.3, ease: "power2.out", }); // <-- animation for the fruit
 
     }, [order]);
 
-    const notify = () => toast("Produto adicionado!", {
-        type: "success"
-    });
+
     return (
         <div id='menu-order' className="  text-black pb-28 ">
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1000px] mx-auto px-2'>
@@ -90,12 +100,12 @@ export default function MenuOrder() {
                                     <span className="text-sm font-bold text-primary">
                                         {formatToBrl(product.priceInCents * product.qtd)}
                                     </span>
-                                     <button
-                                    onClick={() => { cartOrder(product); notify(); }}
-                                    className="bg-primary w-8 h-8 rounded-full flex items-center justify-center active:scale-95 transition-transform duration-300"
-                                >
-                                    <PlusIcon className="text-white w-4 h-4" />
-                                </button>
+                                    <button
+                                        onClick={() => { cartOrder(product); }}
+                                        className="bg-primary w-8 h-8 rounded-full flex items-center justify-center active:scale-95 transition-transform duration-300"
+                                    >
+                                        <PlusIcon className="text-white w-4 h-4" />
+                                    </button>
                                 </div>
                             </div>
 
@@ -105,7 +115,7 @@ export default function MenuOrder() {
                                     alt={product.title}
                                     className="w-24 h-24 object-cover rounded-md"
                                 />
-                               
+
                             </div>
                         </div>
 
