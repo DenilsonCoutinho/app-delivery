@@ -105,7 +105,6 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
               const config = statusConfig[status];
               const StatusIcon = config.icon;
               const statusOrders = orders?.filter((order) => order.status === status) || [];
-              console.log(orders)
               return (
                 <div key={status} className={`${config.bgColor} ${config.borderColor} border-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}>
                   <div className="p-6">
