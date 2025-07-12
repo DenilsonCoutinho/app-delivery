@@ -302,11 +302,8 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
 
   async function handleAdvance(order: Order) {
     try {
-      // setLoading(true)
+      setLoading(true)
       const status = order.status === "NEW" ? "PENDING" : order.status === "PENDING" ? "FINISHED" : "CANCELLED"
-      console.log(status)
-      return
-     
       await UpdateOrder(order.id, status)
       await fetch('https://n8n-app-geli.fly.dev/webhook/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
         method: 'POST',
