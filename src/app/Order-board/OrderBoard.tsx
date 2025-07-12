@@ -30,7 +30,7 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersToModal, setOrdersToModal] = useState<Order>();
   const { isClosed, setIsClosed } = useModal()
-  
+
   useEffect(() => {
     if (!getOrders?.orders) return
     setOrders(getOrders?.orders);
@@ -82,7 +82,14 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
       badgeBg: 'bg-gray-100 text-gray-800'
     }
   };
-//  const refModal = useRef()
+  const divRef = useRef<(HTMLDivElement | null)[]>([]);
+  const divContainerRef = useRef<(HTMLDivElement | null)[]>([]);
+  function modalOpenIfIsNotButton(index: number) {
+    const element = document.getElementById(`button-advance-${index}`)
+    console.log(element)
+    if (element) return
+    setIsClosed(!isClosed);
+  }
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6">
@@ -93,11 +100,11 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-            {(['NEW', 'PENDING', 'FINISHED', 'CANCELLED'] as OrderStatus[]).map((status) => {
+            {(['NEW', 'PENDING', 'FINISHED', 'CANCELLED'] as OrderStatus[]).map((status, indexStatus) => {
               const config = statusConfig[status];
               const StatusIcon = config.icon;
               const statusOrders = orders?.filter((order) => order.status === status) || [];
-              
+
               return (
                 <div key={status} className={`${config.bgColor} ${config.borderColor} border-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}>
                   <div className="p-6">
@@ -116,12 +123,13 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
                     </div>
 
                     <div className="space-y-3 max-h-96 overflow-y-auto">
-                      {statusOrders.map((order) => (
-                        <div 
-                          key={order.id} 
+                      {statusOrders.map((order, index) => (
+                        <div
+                          key={order.id}
                           onClick={() => {
                             setOrdersToModal(order);
-                            setIsClosed(!isClosed);
+                            ;
+                            modalOpenIfIsNotButton(index)
                           }}
                           className={`${config.cardBg} ${config.cardBorder} border rounded-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] group`}
                         >
@@ -154,10 +162,13 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
                           </div>
 
                           {status !== 'FINISHED' && status !== 'CANCELLED' && (
-                            <div className="mt-4 pt-3 border-t border-gray-200">
+                            <div
+                              // ref={(el) => { (divRef.current[index] = el) }}
+                              className="mt-4 pt-3 border-t border-gray-200">
                               <Button
+                                id={`button-advance-${index}`}
                                 onClick={() => {
-                                  handleAdvance(order);
+                                  handleAdvance(order)
                                 }}
                                 className={`w-full ${config.buttonBg} text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 group-hover:shadow-md`}
                               >
@@ -168,7 +179,7 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
                           )}
                         </div>
                       ))}
-                      
+
                       {statusOrders.length === 0 && (
                         <div className="text-center py-8 text-gray-500">
                           <StatusIcon className={`w-12 h-12 mx-auto mb-3 ${config.iconColor} opacity-50`} />
