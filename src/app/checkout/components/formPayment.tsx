@@ -67,7 +67,7 @@ export default function FormPayment({ formPayment }: FormPaymentProps) {
                         </label>
                     </div>
 
-                    <div className="px-4 py-3">
+                    {/* <div className="px-4 py-3">
                         <label className="flex items-center gap-3 cursor-pointer">
                             <input
                                 type="checkbox"
@@ -81,7 +81,7 @@ export default function FormPayment({ formPayment }: FormPaymentProps) {
                                 <span className="font-medium text-slate-700">Cartão</span>
                             </div>
                         </label>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

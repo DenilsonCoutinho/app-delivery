@@ -5,6 +5,7 @@ import MenuOrder from "./components/menuOrder";
 import ToggleCart from "./components/toggleCart";
 import CartDrawerView from "./components/cartDrawerView";
 import Loading from "./components/ui/loading/loading";
+import Footer from "./components/footer";
 
 const kodchasan = Kodchasan({
   variable: "--font-geist-sans",
@@ -20,6 +21,7 @@ export default function Home() {
       <MenuPreview />
       <MenuOrder />
       <ToggleCart />
+      <Footer />
     </div>
   );
 }

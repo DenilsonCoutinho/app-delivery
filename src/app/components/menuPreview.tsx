@@ -9,6 +9,7 @@ import prdct from "@/assets/menu/IMG_20250621_113655 1.svg";
 import prdct2 from "@/assets/menu/IMG_20250621_113741 (1) 1.svg";
 import prdct3 from "@/assets/menu/WhatsApp Image 2025-06-21 at 14.20.07 1.svg";
 import Button from "./ui/button/button";
+import { scrollToElement } from "@/lib/useScrollIntoView";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,7 +72,8 @@ export default function Menu() {
         });
     });
 
-  
+    
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 -translate-y-16 overflow-hidden">
 
@@ -81,7 +83,7 @@ export default function Menu() {
                     className={`bg-white content-${item.id} rounded-xl flex flex-col justify-between h-[450px] shadow-2xl py-5 px-4 text-center`}
                 >
                     <div
-                        
+
                     >
                         <Image
                             src={item.image}
@@ -91,7 +93,7 @@ export default function Menu() {
                     </div>
                     <h2 className="text-xl font-semibold text-gray-800">{item.title}</h2>
                     <p className="text-gray-600 mb-4">{item.subtitle}</p>
-                    <Button className="bg-primary active:scale-90 shadow-xs text-white px-4 py-2 rounded-2xl hover:brightness-150 duration-100">
+                    <Button onClick={()=>scrollToElement("menu-order")} className="bg-primary active:scale-90 shadow-xs text-white px-4 py-2 rounded-2xl hover:brightness-150 duration-100">
                         Ver cardápio
                     </Button>
                 </div>

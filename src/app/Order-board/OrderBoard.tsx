@@ -6,7 +6,8 @@ import Button from '../components/ui/button/button';
 import UpdateOrder from '@/services/updateOrder';
 import { Modal } from '../components/ui/modal';
 import { useModal } from '@/lib/zustand/useModal';
-import { Clock, Package, CheckCircle, XCircle, User, Phone, CreditCard, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Clock, Package, CheckCircle, XCircle, User, Phone, CreditCard, ShoppingBag, ArrowRight, Hamburger, MenuIcon } from 'lucide-react';
+import { useTriggerLoading } from '@/context/triggerLoading';
 
 type OrderStatus = 'NEW' | 'PENDING' | 'FINISHED' | 'CANCELLED';
 
@@ -30,6 +31,7 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersToModal, setOrdersToModal] = useState<Order>();
   const { isClosed, setIsClosed } = useModal()
+  const { setLoading } = useTriggerLoading()
 
   useEffect(() => {
     if (!getOrders?.orders) return
@@ -84,10 +86,9 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
   };
   const divRef = useRef<(HTMLDivElement | null)[]>([]);
   const divContainerRef = useRef<(HTMLDivElement | null)[]>([]);
-  function modalOpenIfIsNotButton(index: number) {
-    const element = document.getElementById(`button-advance-${index}`)
-    console.log(element)
-    if (element) return
+  function modalOpenIfIsNotButton() {
+    const element = document.getElementById(`button-advance`)
+    if (element?.classList.contains("button-advance")) return
     setIsClosed(!isClosed);
   }
   return (
@@ -104,7 +105,7 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
               const config = statusConfig[status];
               const StatusIcon = config.icon;
               const statusOrders = orders?.filter((order) => order.status === status) || [];
-
+              console.log(orders)
               return (
                 <div key={status} className={`${config.bgColor} ${config.borderColor} border-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden`}>
                   <div className="p-6">
@@ -128,8 +129,7 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
                           key={order.id}
                           onClick={() => {
                             setOrdersToModal(order);
-                            ;
-                            modalOpenIfIsNotButton(index)
+
                           }}
                           className={`${config.cardBg} ${config.cardBorder} border rounded-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] group`}
                         >
@@ -137,8 +137,11 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-bold text-gray-900">Pedido #{order.id}</span>
                             </div>
-                            <div className="text-lg font-bold text-gray-900">
-                              {formatToBrl(order.total)}
+                            <div className='flex flex-col items-end'>
+                              <div className="text-lg font-bold text-gray-900">
+                                {formatToBrl(order.total)}
+                              </div>
+                              <MenuIcon onClick={() => modalOpenIfIsNotButton()} className='text-black w-10 h-10 text-4xl' />
                             </div>
                           </div>
 
@@ -160,23 +163,39 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
                               <span>{order.items.length} item{order.items.length !== 1 ? 's' : ''}</span>
                             </div>
                           </div>
+                          <div className='flex flex-col gap-3 Button-adjust-Status'>
+                            {status !== 'FINISHED' && status !== 'CANCELLED' && (
+                              <div
+                                ref={(el) => { (divRef.current[index] = el) }}
+                                className="mt-4 pt-3 cursor-pointer border-t border-gray-200">
+                                <Button
+                                  id={`button-advance-${index}`}
+                                  onClick={() => {
+                                    handleAdvance(order)
+                                  }}
+                                  className={`w-full ${config.buttonBg} cursor-pointer button-advance text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 group-hover:shadow-md`}
+                                >
+                                  <span>{status === 'NEW' ? 'Aceitar Pedido' : 'Avançar Status'}</span>
+                                  <ArrowRight className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            )}
+                            {
+                              status !== "FINISHED" && status !== "CANCELLED" && <>
+                                <Button
+                                  id={`button-advance-${index}`}
+                                  onClick={() => {
+                                    handleAdvance({ ...order, status: "CANCELLED" })
+                                  }}
+                                  className={`w-full cursor-pointer button-advance bg-red-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 group-hover:shadow-md`}
+                                >
+                                  <span>{'Cancelar'}</span>
+                                  <ArrowRight className="w-4 h-4" />
+                                </Button>
+                              </>
+                            }
+                          </div>
 
-                          {status !== 'FINISHED' && status !== 'CANCELLED' && (
-                            <div
-                              // ref={(el) => { (divRef.current[index] = el) }}
-                              className="mt-4 pt-3 border-t border-gray-200">
-                              <Button
-                                id={`button-advance-${index}`}
-                                onClick={() => {
-                                  handleAdvance(order)
-                                }}
-                                className={`w-full ${config.buttonBg} text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 group-hover:shadow-md`}
-                              >
-                                <span>{status === 'NEW' ? 'Aceitar Pedido' : 'Avançar Status'}</span>
-                                <ArrowRight className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          )}
                         </div>
                       ))}
 
@@ -283,7 +302,11 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
 
   async function handleAdvance(order: Order) {
     try {
+      // setLoading(true)
       const status = order.status === "NEW" ? "PENDING" : order.status === "PENDING" ? "FINISHED" : "CANCELLED"
+      console.log(status)
+      return
+     
       await UpdateOrder(order.id, status)
       await fetch('https://n8n-app-geli.fly.dev/webhook/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
         method: 'POST',
@@ -296,7 +319,9 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
           name: order?.user?.name
         }),
       });
+      setLoading(false)
     } catch (error) {
+      setLoading(true)
       alert(error)
     }
   }

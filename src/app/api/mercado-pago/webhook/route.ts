@@ -43,7 +43,7 @@ export async function POST(request: Request) {
             return i?.priceInCents * i.qtd
           })
           const priceReduce = priceInCents.reduce((acumulador: any, numero: any) => acumulador + numero, 0);
-          const createOrder = await CreateOrder(orders, OnlyNumber, priceReduce,paymentForm)
+          const createOrder = await CreateOrder(orders, OnlyNumber, priceReduce,paymentForm,'PAID')
           const ordersToN8n = rawItems.map((item: any) => ({
             title: item.title,
             subtitle: item.subtitle,

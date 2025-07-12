@@ -3,7 +3,7 @@
 import { Product } from "@/lib/zustand/useOrder";
 import { db as prisma } from "@/lib/db";
 import { revalidateTag } from "next/cache";
-export default async function CreateOrder(order: Product, number: string, totPrice: number, paymentForm: string) {
+export default async function CreateOrder(order: Product, number: string, totPrice: number, paymentForm: string,isPaid?:"PAID") {
    const create = await prisma.order.create({
         data: {
             user: {
@@ -13,7 +13,8 @@ export default async function CreateOrder(order: Product, number: string, totPri
             items: {
                 create: order
             },
-            payment_form: paymentForm
+            payment_form: paymentForm,
+            paid:isPaid
         }
     });
   revalidateTag('orders')

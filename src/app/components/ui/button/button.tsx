@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export default function Button({ onClick, children, className, ...rest }: ButtonProps) {
     return (
-        <button {...rest} onClick={onClick} className={clsx("duration-150", className)}>
+        <button  {...rest} onClick={onClick} className={clsx("duration-150", className)}>
             {children}
         </button>
     );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTriggerLoading } from "@/context/triggerLoading";
 import { useIdentification } from "@/lib/zustand/useIdentification";
 import { useOrder } from "@/lib/zustand/useOrder";
 import { useEffect, useState } from "react";
@@ -10,9 +11,12 @@ export default function Accompany() {
     const { name, setName, number, setNumber } = useIdentification()
     const { order, setOrder } = useOrder()
     const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+    const { setLoading } = useTriggerLoading()
 
     useEffect(() => {
         setOrder([])
+        setLoading(false)
+
     }, [])
 
     return (

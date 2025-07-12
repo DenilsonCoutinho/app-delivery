@@ -16,6 +16,7 @@ import UpsertIdentification from "@/services/upsertIdentification"
 import { error } from "console"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
+import CreateOrder from "../../../actions/createOrder"
 export default function Checkout() {
     useEffect(() => {
         setLoading(false)
@@ -37,7 +38,7 @@ export default function Checkout() {
         value: "Rua Bernado Welter, 346 - COSTA E SILVA, Joinville",
     }
     const route = useRouter()
-    
+
     const priceInCents = order?.map((i) => {
         return i?.priceInCents * i.qtd
     })
@@ -104,19 +105,62 @@ export default function Checkout() {
 
     const { createMercadoPagoCheckout } = useMercadoPago();
     async function createCheckoutOrNot() {
-        if (formPaymentIsSelected === "pix" || formPaymentIsSelected === "cartão") {
-            createMercadoPagoCheckout({
-                testeId: idOrder,
-                // userEmail: "contact.denilsoncoutinho@gmail.com",
-                items: order,
-                number: number,
-                name: name,
-                paymentForm: formPaymentIsSelected
-            })
-            return
+        try {
+            setLoading(true)
+            if (formPaymentIsSelected === "pix") {
+                createMercadoPagoCheckout({
+                    testeId: idOrder,
+                    // userEmail: "contact.denilsoncoutinho@gmail.com",
+                    items: order,
+                    number: number,
+                    name: name,
+                    paymentForm: formPaymentIsSelected
+                })
+                return
+            }
+            const OnlyNumber = number?.replace(/[ \-\(\)]/g, "")
+            const orders: any = order.map((item: any) => ({
+                title: item.title,
+                subtitle: item.subtitle,
+                qtd: item.qtd,
+                price: item.price,
+                priceInCents: item?.priceInCents,
+                final_price: item.final_price,
+            }));
+            
+            const priceReduce = priceInCents.reduce((acumulador: any, numero: any) => acumulador + numero, 0);
+            const createOrder = await CreateOrder(orders, OnlyNumber, priceReduce, formPaymentIsSelected!)
+            const ordersToN8n = order.map((item: any) => ({
+                title: item.title,
+                subtitle: item.subtitle,
+                qtd: item.qtd,
+                price: item.price,
+                priceInCents: item?.priceInCents,
+                final_price: formatToBrl(item?.priceInCents * item.qtd),
+            }));
+            await fetch('https://n8n-app-geli.fly.dev/webhook/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
+                method: 'POST', // ou 'GET' dependendo de como você configurou o webhook
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    number: OnlyNumber,
+                    orders: ordersToN8n,
+                    totPrice: priceReduce,
+                    id: createOrder?.id
+                }),
+            });
+            route.replace('/accompany')
+        } catch (error) {
+            setLoading(false)
+            toast(`Ocorreu algo errado!`, {
+                type: "error"
+            });
         }
-        console.log("levar pra tela de pedido")
+
     }
+
     return (
         <div className=" bg-white min-h-dvh">
             <div className="max-w-xl mx-auto p-4">
