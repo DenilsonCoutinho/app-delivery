@@ -304,6 +304,7 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
       setLoading(true)
       const status = order.status === "NEW" ? "PENDING" : order.status === "PENDING" ? "FINISHED" : "CANCELLED"
       await UpdateOrder(order.id, status)
+      setLoading(false)
       await fetch('https://n8n-app-geli.fly.dev/webhook/d79a1391-4e64-4ff8-af61-f6edf2fe8084', {
         method: 'POST',
         headers: {
@@ -315,7 +316,6 @@ export default function OrderBoard({ getOrders }: { getOrders: { orders: Order[]
           name: order?.user?.name
         }),
       });
-      setLoading(false)
     } catch (error) {
       setLoading(true)
       alert(error)
