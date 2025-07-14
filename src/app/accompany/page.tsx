@@ -6,7 +6,7 @@ import { useOrder } from "@/lib/zustand/useOrder";
 import { useEffect, useState } from "react";
 
 export default function Accompany() {
-    const [numero, setNumero] = useState("5548991109700"); // Altere para o número do seu WhatsApp (com DDI)
+    const [numero, setNumero] = useState("5547992227581"); // Altere para o número do seu WhatsApp (com DDI)
     const [mensagem, setMensagem] = useState("Olá! Quero acompanhar meu pedido!");
     const { name, setName, number, setNumber } = useIdentification()
     const { order, setOrder } = useOrder()

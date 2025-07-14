@@ -39,7 +39,7 @@ export default function MenuOrder() {
             subtitle: "Do norte, artesanal e fresquinha",
             price: "R$ 17,00",
             priceInCents: 1,
-            qtd: 1,
+            qtd: 1700,
             final_price: undefined
 
         },
