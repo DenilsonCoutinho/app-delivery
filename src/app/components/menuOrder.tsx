@@ -28,7 +28,7 @@ export default function MenuOrder() {
             title: "Polpa de açai",
             subtitle: "Nosso açai vindo diretamente do norte, cada poupa rende até 2 litros.",
             price: "R$ 35,00",
-            priceInCents: 1,
+            priceInCents: 3500,
             qtd: 1,
             final_price: undefined
         },
@@ -39,7 +39,7 @@ export default function MenuOrder() {
             subtitle: "Do norte, artesanal e fresquinha",
             price: "R$ 17,00",
             priceInCents: 1,
-            qtd: 1700,
+            qtd: 1,
             final_price: undefined
 
         },
@@ -49,7 +49,7 @@ export default function MenuOrder() {
             title: "Farinha Branca",
             subtitle: "Perfeita para sua farofa ou açaí",
             price: "R$ 15,00",
-            priceInCents: 1,
+            priceInCents: 1500,
             qtd: 1,
             final_price: undefined
 
