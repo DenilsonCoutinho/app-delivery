@@ -23,7 +23,7 @@ const ContactInfo = () => {
           <div className="bg-card border border-border rounded-lg p-6 max-w-[300px] w-full text-center shadow-sm">
             <Clock className="w-8 h-8 mx-auto mb-4 text-primary" />
             <h3 className="text-lg font-semibold mb-2 text-gray-500">Horário</h3>
-            <p className="text-muted-foreground mb-2 text-gray-500">9h às 18h</p>
+            <p className="text-muted-foreground mb-2 text-gray-500">9h às 20h</p>
             <p className="text-sm text-muted-foreground text-gray-500">Segunda a Sexta</p>
           </div>
         </div>

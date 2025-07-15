@@ -38,7 +38,7 @@ export default function MenuOrder() {
             title: "Farinha de Tapioca",
             subtitle: "Do norte, artesanal e fresquinha",
             price: "R$ 17,00",
-            priceInCents: 1,
+            priceInCents: 1700,
             qtd: 1,
             final_price: undefined
 
